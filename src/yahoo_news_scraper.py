@@ -20,15 +20,19 @@ ActionChains(driver).scroll_to_element(first_article).perform()
 #click on the element
 first_article.click()
 
-#Get the first paragraph of the article
-#wait for the element to become available
+#Go to the part of the page that conains the text
+paragraph_container = driver.find_element(By.CSS_SELECTOR, "div.body.yf-tsvcyu")
+driver.execute_script("arguments[0].scrollIntoView(true);", paragraph_container)
+
+# Wait for all paragraphs to load
 WebDriverWait(driver, 10).until(
-    EC.presence_of_element_located("div.body-wrap.yf-i23rhs")
+    EC.presence_of_all_elements_located((By.CSS_SELECTOR, "p.yf-1pe5jgt"))
 )
 
-#Scroll to the section of the page with the article, may not be necessary
-# content = driver.find_element(By.CLASS_NAME, "body-wrap")
-# ActionChains(driver).scroll_to_element(content).perform()
+paragraphs = driver.find_elements(By.CSS_SELECTOR, "p.yf-1pe5jgt")
+
+for paragraph in paragraphs:
+    print(paragraph.text)
 
 if input("Type 'quit' to finish session: ") == 'quit':
     driver.quit()
