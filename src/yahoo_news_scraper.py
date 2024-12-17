@@ -41,8 +41,12 @@ WebDriverWait(driver, 10).until(
 
 paragraphs = driver.find_elements(By.CSS_SELECTOR, "p.yf-1pe5jgt")
 
+article = ""
+
 for paragraph in paragraphs:
-    print(paragraph.text)
+    article += paragraph.text.strip().replace("\"", "\'")
+
+print(article)
 
 if input("Type 'quit' to finish session: ") == 'quit':
     driver.quit()
