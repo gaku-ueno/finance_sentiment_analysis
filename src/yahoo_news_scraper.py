@@ -11,17 +11,28 @@ driver = webdriver.Chrome()
 
 driver.get('https://finance.yahoo.com/quote/AAPL/news/')
 
-#locates the first article
-first_article = driver.find_element(By.CSS_SELECTOR, "h3.clamp.yf-18q3fnf")
+#checks whether the article exists in the paget
+#target_article is a WebElement object that you are able to run a bunch of commands with
+target_article = WebDriverWait(driver, 10).until(
+    EC.presence_of_element_located((By.CSS_SELECTOR, "h3.clamp.yf-18q3fnf"))
+)
 
-#scrolls to the element
-ActionChains(driver).scroll_to_element(first_article).perform()
+#scroll to target article
+driver.execute_script("arguments[0].scrollIntoView(false);", target_article)
 
-#click on the element
-first_article.click()
+#wait for the target_article to become clickable
+WebDriverWait(driver, 10).until(
+    EC.element_to_be_clickable(target_article)
+)
+
+#click on the target article
+target_article.click()
+
+paragraph_container = WebDriverWait(driver, 10).until(
+    EC.presence_of_element_located((By.CSS_SELECTOR, "div.body.yf-tsvcyu"))
+)
 
 #Go to the part of the page that conains the text
-paragraph_container = driver.find_element(By.CSS_SELECTOR, "div.body.yf-tsvcyu")
 driver.execute_script("arguments[0].scrollIntoView(true);", paragraph_container)
 
 # Wait for all paragraphs to load
