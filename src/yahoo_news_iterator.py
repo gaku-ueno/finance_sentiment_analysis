@@ -16,26 +16,32 @@ articles_container = WebDriverWait(driver, 30).until(
     EC.presence_of_element_located((By.CSS_SELECTOR, "ul.stream-items.yf-1usaaz9"))
 )
 
-i = 0
-target_article_count = 50
+i = 3
+target_article_count = 5
 ads = 0
 valid_articles = 0
 
 article_txt_data = []
 
-while i < target_article_count:
+while i <= target_article_count:
 
     print(f'iteration {i}')
 
-    # if i > 25:
-    #     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    if i >= 25:
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(1)
 
     #must be reloaded every time you reload the homepage
     articles = driver.find_elements(By.CSS_SELECTOR, "ul.stream-items.yf-1usaaz9 > li")
 
     print('number of articles: ', len(articles))
     
-    article = articles[i]
+    try:
+        article = articles[i]
+        print(article.text)
+    except Exception as e:
+        print(f"error: {e}")
+        break
     article_class = article.get_attribute("class")
 
     if "ad-item" in article_class:
@@ -52,6 +58,7 @@ while i < target_article_count:
     )
 
     #click on the target article
+    driver.execute_script("arguments[0].scrollIntoView(true); arguments[0].style.border='3px solid red';", article)
     article.click()
 
     paragraph_container = WebDriverWait(driver, 10).until(
@@ -84,7 +91,7 @@ while i < target_article_count:
     time.sleep(0.5)
 
 print(article_txt_data)
-print("number of articles collectec: ", )
+print("number of articles collected: ", len(article_txt_data))
 
 if input("Type 'quit' to finish session: ") == 'quit':
     driver.quit()
